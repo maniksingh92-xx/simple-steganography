@@ -30,11 +30,12 @@ public class SteganoImgProcess {
 	//Method for encoding text into source image
 	void encode(BufferedImage input, BufferedImage output, int width, int height, String msg, String outputName) {
 		
-		//Appending original text "msg" with '!' so as to denote the
-		//when the message terminates.
-
+		
 		int msgLength = msg.length(); //original message length
-		String message = "!encoded!" + msgLength + "!" + msg;
+		//add overhead "!encoded!" to identify start of encoded message,
+		//along with original message length which will instruct when to stop
+		//the decoding process, once the encoded message has been extracted
+		String message = "!encoded!" + msgLength + "!" + msg; 
 		msgLength = message.length(); //message length included the overhead
 		
 		//Creating an array of integers which will hold the entire message
