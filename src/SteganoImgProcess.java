@@ -1,4 +1,4 @@
-/* SIMPLE STEGANOGRAPHY : SteganoImgProcess.java
+/* IMAGE STEGANOGRAPHY : SteganoImgProcess.java
  * 
  * This source code form is protected under GPL v2.0.
  * To read more about the license, follow the link:
@@ -28,7 +28,7 @@ public class SteganoImgProcess {
 	int encodedMsgOffset;
 	
 	//Method for encoding text into source image
-	void encode(BufferedImage input, BufferedImage output, int width, int height, String msg, String outputName) {
+	boolean encode(BufferedImage input, BufferedImage output, int width, int height, String msg, String outputName) {
 		
 		
 		int msgLength = msg.length(); //original message length
@@ -80,8 +80,10 @@ public class SteganoImgProcess {
 		
 		try {
 			ImageIO.write(output, "png", new File(outputName)); //create .PNG file with encoded image data
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
 	}// end of encode()

@@ -1,4 +1,4 @@
-/* SIMPLE STEGANOGRAPHY : Start.java
+/* IMAGE STEGANOGRAPHY : Start.java
  * 
  * This source code form is protected under GPL v2.0.
  * To read more about the license, follow the link:
@@ -16,7 +16,9 @@
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Toolkit;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.JWindow;
 
 public class Start extends JWindow implements Runnable{
@@ -49,7 +51,14 @@ public class Start extends JWindow implements Runnable{
 	
 	//over-riding paint() method for displaying splash screen image
 	public void paint(Graphics g) {
-		Image splashScreen = Toolkit.getDefaultToolkit().getImage("images\\start_splash.jpg");
+		Image splashScreen = null;
+		try {
+			splashScreen = ImageIO.read(getClass().getResource("images/start_splash.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image splashScreen = Toolkit.getDefaultToolkit().getImage("images\\start_splash.jpg");
 		//Displaying splash screen at the center position of the screen
 		int xPosition = (this.getWidth() - splashScreen.getWidth(null)) / 2;
 		int yPosition = (this.getHeight() - splashScreen.getHeight(null)) / 2;

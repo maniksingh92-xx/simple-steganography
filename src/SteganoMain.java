@@ -1,4 +1,4 @@
-/* SIMPLE STEGANOGRAPHY : SteganoMain.java
+/* IMAGE STEGANOGRAPHY : SteganoMain.java
  * 
  * This source code form is protected under GPL v2.0.
  * To read more about the license, follow the link:
@@ -24,7 +24,6 @@ import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -35,7 +34,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+//import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -44,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -83,6 +83,13 @@ public class SteganoMain extends JFrame implements ActionListener {
 	
 	//Start of SteganoMain() constructor
 	SteganoMain() {
+		
+		try
+		{
+		  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch(Exception e){}
+		
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 		
 		//Used to display output image which has been encoded with the hidden text
@@ -140,7 +147,13 @@ public class SteganoMain extends JFrame implements ActionListener {
 			
 			//Set background image
 			public void paintComponent(Graphics g) {
-				Image background = Toolkit.getDefaultToolkit().getImage("images\\login_background.jpg");
+				Image background = null;
+				try {
+					background = ImageIO.read(getClass().getResource("images/login_background.jpg"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				g.drawImage(background,0,0,this);
 			}
 		};
@@ -297,13 +310,18 @@ public class SteganoMain extends JFrame implements ActionListener {
 		    imgRows = img.getHeight();
 		    
 		    //Run the encode() method from SteganoImgProcess object for actually encoding text into image
-		    processingObject.encode(img, imgOut, imgCols, imgRows, text.getText(), outputLocation.getText());
+		    boolean success = processingObject.encode(img, imgOut, imgCols, imgRows, text.getText(), outputLocation.getText());
 		    
+		    if(success) {
+		    	JOptionPane.showMessageDialog(this,"Successfully created image", "Success",JOptionPane.INFORMATION_MESSAGE);
+		    } else {
+		    	JOptionPane.showMessageDialog(this,"Problem in saving file!", "Error",JOptionPane.ERROR_MESSAGE);
+		    }
 		    //Displaying output image file on panel for the user
-		    Image im = Toolkit.getDefaultToolkit().getImage(outputFile.getAbsolutePath() + ".png");
+		    /*Image im = Toolkit.getDefaultToolkit().getImage(outputFile.getAbsolutePath() + ".png");
 		    ImageIcon ioc=new ImageIcon(im.getScaledInstance(displayOutput.getWidth(), displayOutput.getHeight(),Image.SCALE_SMOOTH));
 		    displayOutput.setIcon(ioc);
-            displayOutput.setVisible(true);
+            displayOutput.setVisible(true);*/
             
 		} else if (mouseClick.getSource() == saveButton) { //Process for decoding text from source .PNG file
 			try {
@@ -328,11 +346,12 @@ public class SteganoMain extends JFrame implements ActionListener {
 					PrintWriter out = new PrintWriter(outputLocation.getText());
 					out.print(decodedMsg);
 					out.close();
+					JOptionPane.showMessageDialog(this,"Successfully created TXT file", "Success",JOptionPane.INFORMATION_MESSAGE);
 				} catch (FileNotFoundException e) {
 					System.out.println("text file could not be saved.");
 					e.printStackTrace();
 				} 
 		    }
 		}
-	}
+	} //end of actionPerformed() method
 }
